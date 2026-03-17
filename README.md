@@ -28,6 +28,18 @@ The project achieves high test coverage with validation of normal cases, edge ca
 
 ---
 
+## Screenshots
+
+### Application Running
+
+![App](screenshots/app_running.png)
+
+### GitHub Actions
+
+![CI/CD](screenshots/github_actions.png)
+
+---
+
 ## How to Run Locally
 
 ### 1. Install dependencies
@@ -44,7 +56,7 @@ uvicorn main:app --reload
 
 ### 3. Open in browser
 
-http://127.0.0.1:8000
+<http://127.0.0.1:8000>
 
 ---
 

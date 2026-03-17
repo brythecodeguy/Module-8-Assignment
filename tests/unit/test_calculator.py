@@ -1,5 +1,7 @@
 # tests/unit/test_calculator.py
 
+from unittest import result
+
 import pytest  # Import the pytest framework for writing and running tests
 from typing import Union  # Import Union for type hinting multiple possible types
 from app.operations import add, subtract, multiply, divide  # Import the calculator functions from the operations module
@@ -232,3 +234,41 @@ def test_divide_by_zero() -> None:
     # Assert that the exception message contains the expected error message
     assert "Cannot divide by zero!" in str(excinfo.value), \
         f"Expected error message 'Cannot divide by zero!', but got '{excinfo.value}'"
+
+    def test_add_large_numbers() -> None:
+        """
+        Test the 'add' function with large numbers.
+        """
+        result = add(1000000, 2500000)
+        assert result == 3500000, f"Expected 3500000, but got {result}"
+
+    def test_subtract_result_negative() -> None:
+        """
+        Test the 'subtract' function with a negative result.
+        """
+        result = subtract(3, 10)
+        assert result == -7, f"Expected -7, but got {result}"
+
+
+    def test_multiply_two_negative_numbers() -> None:
+        """
+        Test the 'multiply' function with two negative numbers.
+        """
+        result = multiply(-4, -5)
+        assert result == 20, f"Expected 20, but got {result}"
+
+
+    def test_divide_decimal_result() -> None:
+        """
+        Test the 'divide' function with a decimal result.
+        """
+        result = divide(7, 2)
+        assert result == 3.5, f"Expected 3.5, but got {result}"
+
+
+    def test_add_mixed_int_and_float() -> None:
+        """
+        Test the 'add' function with mixed integer and float values.
+        """
+        result = add(5, 2.5)
+        assert result == 7.5, f"Expected 7.5, but got {result}"

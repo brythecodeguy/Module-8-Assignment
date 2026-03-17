@@ -72,4 +72,62 @@ def test_calculator_divide_by_zero(page, fastapi_server):
     # Use an assertion to check that the text within the result div (with id 'result') is exactly
     # "Error: Cannot divide by zero!". This verifies that the application handles division by zero
     # gracefully and displays the correct error message to the user.
-    assert page.inner_text('#result') == 'Error: Cannot divide by zero!'
+    expect(page.locator('#result')).to_have_text('Error: Cannot divide by zero!')
+
+@pytest.mark.e2e
+def test_calculator_subtract(page, fastapi_server):
+    """
+    Test the subtraction functionality of the calculator.
+    """
+    page.goto('http://localhost:8000')
+    page.fill('#a', '9')
+    page.fill('#b', '4')
+    page.click('button:text("Subtract")')
+    expect(page.locator('#result')).to_have_text('Calculation Result: 5')
+
+
+@pytest.mark.e2e
+def test_calculator_multiply(page, fastapi_server):
+    """
+    Test the multiplication functionality of the calculator.
+    """
+    page.goto('http://localhost:8000')
+    page.fill('#a', '6')
+    page.fill('#b', '7')
+    page.click('button:text("Multiply")')
+    expect(page.locator('#result')).to_have_text('Calculation Result: 42')
+
+
+@pytest.mark.e2e
+def test_calculator_divide(page, fastapi_server):
+    """
+    Test the division functionality of the calculator.
+    """
+    page.goto('http://localhost:8000')
+    page.fill('#a', '8')
+    page.fill('#b', '2')
+    page.click('button:text("Divide")')
+    expect(page.locator('#result')).to_have_text('Calculation Result: 4')
+
+
+@pytest.mark.e2e
+def test_calculator_add_decimal_values(page, fastapi_server):
+    """
+    Test the addition functionality of the calculator with decimal values.
+    """
+    page.goto('http://localhost:8000')
+    page.fill('#a', '2.5')
+    page.fill('#b', '3.5')
+    page.click('button:text("Add")')
+    expect(page.locator('#result')).to_have_text('Calculation Result: 6')
+
+@pytest.mark.e2e
+def test_calculator_divide_decimal_result(page, fastapi_server):
+    """ 
+    Test the division functionality of the calculator that results in a decimal value.
+    """
+    page.goto('http://localhost:8000')
+    page.fill('#a', '7')
+    page.fill('#b', '2')
+    page.click('button:text("Divide")')
+    expect(page.locator('#result')).to_have_text('Calculation Result: 3.5')

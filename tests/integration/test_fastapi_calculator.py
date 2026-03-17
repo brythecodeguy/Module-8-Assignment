@@ -3,7 +3,7 @@
 import pytest  # Import the pytest framework for writing and running tests
 from fastapi.testclient import TestClient  # Import TestClient for simulating API requests
 from main import app  # Import the FastAPI app instance from your main application file
-
+from main import OperationRequest
 # ---------------------------------------------
 # Pytest Fixture: client
 # ---------------------------------------------
@@ -212,3 +212,65 @@ def test_homepage_route(client):
     assert response.status_code == 200
     assert 'Hello World' in response.text
 
+def test_add_api_internal_exception(client, monkeypatch):
+    """
+    Test the add endpoint when an unexpected exception occurs.
+    """
+    def mock_add(a, b):
+        raise Exception("Mock add failure")
+
+    monkeypatch.setattr("main.add", mock_add)
+
+    response = client.post('/add', json={'a': 1, 'b': 2})
+    assert response.status_code == 400
+    assert response.json()['error'] == "Mock add failure"
+
+
+def test_subtract_api_internal_exception(client, monkeypatch):
+    """
+    Test the subtract endpoint when an unexpected exception occurs.
+    """
+    def mock_subtract(a, b):
+        raise Exception("Mock subtract failure")
+
+    monkeypatch.setattr("main.subtract", mock_subtract)
+
+    response = client.post('/subtract', json={'a': 5, 'b': 3})
+    assert response.status_code == 400
+    assert response.json()['error'] == "Mock subtract failure"
+
+
+def test_multiply_api_internal_exception(client, monkeypatch):
+    """
+    Test the multiply endpoint when an unexpected exception occurs.
+    """
+    def mock_multiply(a, b):
+        raise Exception("Mock multiply failure")
+
+    monkeypatch.setattr("main.multiply", mock_multiply)
+
+    response = client.post('/multiply', json={'a': 4, 'b': 2})
+    assert response.status_code == 400
+    assert response.json()['error'] == "Mock multiply failure"
+
+
+def test_divide_api_unexpected_exception(client, monkeypatch):
+    """
+    Test the divide endpoint when an unexpected internal exception occurs.
+    """
+    def mock_divide(a, b):
+        raise Exception("Unexpected divide failure")
+
+    monkeypatch.setattr("main.divide", mock_divide)
+
+    response = client.post('/divide', json={'a': 8, 'b': 2})
+    assert response.status_code == 500
+    assert response.json()['error'] == "Internal Server Error"
+
+
+def test_operation_request_validator_rejects_non_numeric_value():
+    """
+    Test that the custom validator rejects non-numeric input.
+    """
+    with pytest.raises(ValueError, match="Both a and b must be numbers."):
+        OperationRequest.validate_numbers("not-a-number")
